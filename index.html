@@ -133,8 +133,19 @@ input, select, textarea { width:100%; padding:8px; margin-top:6px; border-radius
 </style>
 </head>
 <body>
-<div id="loginView" style="
-  display:none;
+<div id="loadingView" style="
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  font-size:20px;
+  font-family:Arial;
+  background:#f3f4f6;
+">
+  Cargando aplicación...
+</div>
+
+<div id="loginView" style="display:none";
   height:100vh;
   justify-content:center;
   align-items:center;
@@ -817,21 +828,28 @@ if(calContainer && weekdaysContainer){
 
 // ==== Inicializar ====
 auth.onAuthStateChanged(user => {
+
+  // 🔹 1. Firebase ya respondió → ocultar pantalla de carga
+  document.getElementById('loadingView').style.display = 'none';
+
   if(user){
+    // 🔹 2. Usuario logueado
     currentUser = user;
+
     document.getElementById('loginView').style.display = 'none';
     document.getElementById('appView').style.display = 'block';
-    
-    // Mostrar email del usuario
-    document.getElementById('currentUserEmail').textContent = "Conectado como: " + user.email;
-    
+
     showMenu();
+
   } else {
+    // 🔹 3. Usuario NO logueado
     currentUser = null;
+
     document.getElementById('appView').style.display = 'none';
-    document.getElementById('loginView').style.display = 'flex';
+    document.getElementById('loginView').style.display = 'block';
   }
 });
+
 
 
 
