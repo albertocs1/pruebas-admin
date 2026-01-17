@@ -287,6 +287,12 @@ function formatDate(dateStr){
 // ==================== FIN HELPERS ====================
 
 // ==== Firebase ====
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDmj5JbSO0UgOcW_5STsH1EfVSA5K3OYTg",
   authDomain: "partes-pruebas.firebaseapp.com",
@@ -296,9 +302,9 @@ const firebaseConfig = {
   messagingSenderId: "495616775624",
   appId: "1:495616775624:web:a7c9d711598003bea45cfd"
 };
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const auth = firebase.auth();
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 // ==== Variables Globales ====
 let companyData = {};
 let currentCompany = null;
