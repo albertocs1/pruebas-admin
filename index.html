@@ -309,11 +309,20 @@ function loadFromStorage(callback){
 
 // ==== UI: menu / compañías ====
 function showMenu(){
-  loadFromStorage(renderCompanyList);
+  // Mostrar menú primero
   document.getElementById('companyMenu').style.display = 'block';
   document.getElementById('calendarView').style.display = 'none';
   document.getElementById('selectedCompanyName').textContent = '';
+
+  // Cargar empresas del usuario desde Firebase (solo al entrar a la app)
+  if(currentUser){
+    db.ref('users/' + currentUser.uid + '/companies').once('value', snapshot => {
+      companyData = snapshot.val() || {};
+      renderCompanyList(); // refresca el menú con los datos actualizados
+    });
+  }
 }
+
 function addCompany(){
   if(!currentUser) return alert("Usuario no autenticado");
 
@@ -325,11 +334,14 @@ function addCompany(){
   companyData[name] = { calendar: {}, templates: [] };
   document.getElementById('newCompanyName').value = '';
 
-  // Guardar en Firebase solo para este usuario
-  currentCompany = name; // opcional: marcar como seleccionada
-  saveToStorage();        // <-- guarda currentCompany usando saveToStorage
-  renderCompanyList();    // <-- refresca la lista inmediatamente
+  // Guardar en Firebase usando saveToStorage()
+  currentCompany = name; // opcional: marca como empresa actual
+  saveToStorage();       // guarda en Firebase bajo el UID del usuario
+
+  // Refrescar el menú de empresas inmediatamente
+  renderCompanyList();
 }
+
 
 
 function renderCompanyList(){
