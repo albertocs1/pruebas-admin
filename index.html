@@ -236,6 +236,7 @@ input, select, textarea { width:100%; padding:8px; margin-top:6px; border-radius
 <!-- Librerías -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <script>
@@ -277,10 +278,11 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
-
+const auth = firebase.auth();
 // ==== Variables Globales ====
 let companyData = {};
 let currentCompany = null;
+let currentUser = null;
 let currentDate = null;
 let currentMonth = null;
 let currentYear = null;
@@ -713,6 +715,23 @@ if('serviceWorker' in navigator){
   navigator.serviceWorker.register('sw.js').then(()=>console.log("Service Worker registrado")).catch(err=>console.log("Error Service Worker:",err));
 }
 
+function login(){
+  const email = document.getElementById('loginEmail').value;
+  const pass = document.getElementById('loginPassword').value;
+
+  auth.signInWithEmailAndPassword(email, pass)
+    .catch(err => alert(err.message));
+}
+
+function register(){
+  const email = document.getElementById('loginEmail').value;
+  const pass = document.getElementById('loginPassword').value;
+
+  auth.createUserWithEmailAndPassword(email, pass)
+    .catch(err => alert(err.message));
+}
+
+
 // ==== Scroll sincronizado (cabeceras) ====
 const calContainer = document.getElementById('calendarContainer');
 const weekdaysContainer = document.querySelector('.weekdaysContainer');
@@ -721,7 +740,19 @@ if(calContainer && weekdaysContainer){
 }
 
 // ==== Inicializar ====
-showMenu();
+auth.onAuthStateChanged(user => {
+  if(user){
+    currentUser = user;
+    document.getElementById('loginView').style.display = 'none';
+    document.body.style.display = 'block';
+    showMenu();
+  } else {
+    currentUser = null;
+    document.body.style.display = 'none';
+    document.getElementById('loginView').style.display = 'flex';
+  }
+});
+
 </script>
 </body>
 </html>
