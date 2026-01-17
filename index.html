@@ -289,18 +289,23 @@ let currentMonth = null;
 let currentYear = null;
 let costByRank = {};
 let exportCallback = null;
-
+  
 // ==== Firebase helpers ====
+// Guardar datos solo del usuario actual
 function saveToStorage(){
-  if(!currentCompany) return;
-  db.ref('companies/'+currentCompany).set(companyData[currentCompany]);
+  if(!currentUser || !currentCompany) return;
+  db.ref('users/' + currentUser.uid + '/companies/' + currentCompany).set(companyData[currentCompany]);
 }
+
+// Cargar todas las empresas del usuario actual
 function loadFromStorage(callback){
-  db.ref('companies').once('value', snapshot => {
+  if(!currentUser) return;
+  db.ref('users/' + currentUser.uid + '/companies').once('value', snapshot => {
     companyData = snapshot.val() || {};
     if(callback) callback();
   });
 }
+
 
 // ==== UI: menu / compañías ====
 function showMenu(){
@@ -310,14 +315,22 @@ function showMenu(){
   document.getElementById('selectedCompanyName').textContent = '';
 }
 function addCompany(){
+  if(!currentUser) return alert("Usuario no autenticado");
+
   const name = document.getElementById('newCompanyName').value.trim();
   if(!name) return;
   if(companyData[name]) { alert('Ya existe esa empresa'); return; }
+
+  // Crear nueva empresa localmente
   companyData[name] = { calendar: {}, templates: [] };
   document.getElementById('newCompanyName').value = '';
-  saveToStorage();
-  renderCompanyList();
+
+  // Guardar en Firebase solo para este usuario
+  db.ref('users/' + currentUser.uid + '/companies/' + name).set(companyData[name])
+    .then(() => renderCompanyList())
+    .catch(err => alert("Error guardando empresa: " + err.message));
 }
+
 function renderCompanyList(){
   const container = document.getElementById('companyList');
   container.innerHTML = '';
