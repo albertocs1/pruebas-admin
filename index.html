@@ -339,12 +339,20 @@ function showMenu(){
   document.getElementById('calendarView').style.display = 'none';
   document.getElementById('selectedCompanyName').textContent = '';
 
-  if(!currentUser) return;
+  if(!currentUser) {
+    console.warn("Usuario no definido, showMenu cancelado");
+    return;
+  }
 
+  // Mostrar email del usuario
+  document.getElementById('currentUserEmail').textContent = "Conectado como: " + currentUser.email;
+
+  // Cargar empresas desde Firebase y luego renderizar
   loadFromStorage(() => {
     renderCompanyList();
   });
 }
+
 
 
 function addCompany(){
@@ -361,15 +369,15 @@ function addCompany(){
   companyData[name] = { calendar: {}, templates: [] };
   document.getElementById('newCompanyName').value = '';
 
-  // Guardar en Firebase
   currentCompany = name;
+
+  // Guardar en Firebase
   saveToStorage();
 
-  // 🔁 Recargar desde Firebase para asegurar consistencia
-  loadFromStorage(() => {
-    renderCompanyList();
-  });
+  // 🔹 Actualizar la lista inmediatamente, sin esperar a Firebase
+  renderCompanyList();
 }
+
 
 
 
@@ -828,27 +836,23 @@ if(calContainer && weekdaysContainer){
 
 // ==== Inicializar ====
 auth.onAuthStateChanged(user => {
-
-  // 🔹 1. Firebase ya respondió → ocultar pantalla de carga
   document.getElementById('loadingView').style.display = 'none';
 
   if(user){
-    // 🔹 2. Usuario logueado
     currentUser = user;
-
     document.getElementById('loginView').style.display = 'none';
     document.getElementById('appView').style.display = 'block';
-
+    
+    // 🔹 Mostrar menú de empresas correctamente
     showMenu();
 
   } else {
-    // 🔹 3. Usuario NO logueado
     currentUser = null;
-
     document.getElementById('appView').style.display = 'none';
-    document.getElementById('loginView').style.display = 'block';
+    document.getElementById('loginView').style.display = 'flex';
   }
 });
+
 
 
 
