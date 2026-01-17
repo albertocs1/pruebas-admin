@@ -326,10 +326,11 @@ function addCompany(){
   document.getElementById('newCompanyName').value = '';
 
   // Guardar en Firebase solo para este usuario
-  db.ref('users/' + currentUser.uid + '/companies/' + name).set(companyData[name])
-    .then(() => renderCompanyList())
-    .catch(err => alert("Error guardando empresa: " + err.message));
+  currentCompany = name; // opcional: marcar como seleccionada
+  saveToStorage();        // <-- guarda currentCompany usando saveToStorage
+  renderCompanyList();    // <-- refresca la lista inmediatamente
 }
+
 
 function renderCompanyList(){
   const container = document.getElementById('companyList');
