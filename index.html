@@ -184,14 +184,17 @@ input, select, textarea { width:100%; padding:8px; margin-top:6px; border-radius
 <!-- MENU EMPRESAS -->
 <div id="companyMenu">
   <h2>Empresas</h2>
+  <!-- Email del usuario conectado -->
+  <p id="currentUserEmail" style="font-size:0.9rem; color:#555; margin-bottom:8px;"></p>
+  
   <div id="companyList"></div>
   <div style="margin-top:10px; display:flex; gap:8px; align-items:center;">
     <input type="text" id="newCompanyName" placeholder="Nueva empresa">
     <button onclick="addCompany()" class="back-btn">Añadir</button>
-    <div style="margin-top:10px;">
-  <button id="logoutBtn" class="back-btn" style="background:#ef4444; width:100%;">Cerrar sesión / Cambiar usuario</button>
-</div>
-
+  </div>
+  
+  <div style="margin-top:10px;">
+    <button id="logoutBtn" class="back-btn" style="background:#ef4444; width:100%;">Cerrar sesión / Cambiar usuario</button>
   </div>
 </div>
 
@@ -395,6 +398,7 @@ function logout() {
       // 🔹 Limpiar la UI
       document.getElementById('appView').style.display = 'none';
       document.getElementById('loginView').style.display = 'flex';
+      document.getElementById('currentUserEmail').textContent = '';
 
       // 🔹 Limpiar menús y calendarios
       document.getElementById('companyList').innerHTML = '';
@@ -803,6 +807,10 @@ auth.onAuthStateChanged(user => {
     currentUser = user;
     document.getElementById('loginView').style.display = 'none';
     document.getElementById('appView').style.display = 'block';
+    
+    // Mostrar email del usuario
+    document.getElementById('currentUserEmail').textContent = "Conectado como: " + user.email;
+    
     showMenu();
   } else {
     currentUser = null;
@@ -810,6 +818,7 @@ auth.onAuthStateChanged(user => {
     document.getElementById('loginView').style.display = 'flex';
   }
 });
+
 
 
 </script>
