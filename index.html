@@ -132,7 +132,7 @@ input, select, textarea { width:100%; padding:8px; margin-top:6px; border-radius
 }
 </style>
 </head>
-<body style="display:none">
+<body>
 <div id="loginView" style="
   display:none;
   height:100vh;
@@ -165,6 +165,7 @@ input, select, textarea { width:100%; padding:8px; margin-top:6px; border-radius
     </button>
   </div>
 </div>
+<div id="appView" style="display:none">
 
 
 <div class="header">
@@ -744,15 +745,20 @@ auth.onAuthStateChanged(user => {
   if(user){
     currentUser = user;
     document.getElementById('loginView').style.display = 'none';
-    document.body.style.display = 'block';
+    document.getElementById('appView').style.display = 'block';
     showMenu();
   } else {
     currentUser = null;
-    document.body.style.display = 'none';
+    document.getElementById('appView').style.display = 'none';
     document.getElementById('loginView').style.display = 'flex';
   }
 });
 
+
 </script>
+
+</div> <!-- cierre appView -->
+
 </body>
 </html>
+
