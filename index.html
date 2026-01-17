@@ -341,20 +341,25 @@ function addCompany(){
 
   const name = document.getElementById('newCompanyName').value.trim();
   if(!name) return;
-  if(companyData[name]) { alert('Ya existe esa empresa'); return; }
+  if(companyData[name]) {
+    alert('Ya existe esa empresa');
+    return;
+  }
 
   // Crear nueva empresa localmente
   companyData[name] = { calendar: {}, templates: [] };
   document.getElementById('newCompanyName').value = '';
 
-  // Guardar en Firebase usando saveToStorage()
-  currentCompany = name; // opcional: marca como empresa actual
- saveToStorage();
+  // Guardar en Firebase
+  currentCompany = name;
+  saveToStorage();
 
-// 🔁 Recargar desde Firebase para asegurar consistencia
-loadFromStorage(() => {
-  renderCompanyList();
-});
+  // 🔁 Recargar desde Firebase para asegurar consistencia
+  loadFromStorage(() => {
+    renderCompanyList();
+  });
+}
+
 
 
 
@@ -369,7 +374,7 @@ function renderCompanyList(){
     div.onclick = () => openCompany(c);
     container.appendChild(div);
   });
-  document.getElementById('showMenuBtn').onclick = showMenu;
+
 }
 function openCompany(name){
   currentCompany = name;
@@ -416,6 +421,7 @@ function logout() {
     .catch(err => alert("Error cerrando sesión: " + err.message));
 }
 document.getElementById('logoutBtn').onclick = logout;
+document.getElementById('showMenuBtn').onclick = showMenu;
 
   
 // ==== Render calendario ====
