@@ -188,6 +188,10 @@ input, select, textarea { width:100%; padding:8px; margin-top:6px; border-radius
   <div style="margin-top:10px; display:flex; gap:8px; align-items:center;">
     <input type="text" id="newCompanyName" placeholder="Nueva empresa">
     <button onclick="addCompany()" class="back-btn">Añadir</button>
+    <div style="margin-top:10px;">
+  <button id="logoutBtn" class="back-btn" style="background:#ef4444; width:100%;">Cerrar sesión / Cambiar usuario</button>
+</div>
+
   </div>
 </div>
 
@@ -375,6 +379,33 @@ function backToMenu(){ currentCompany = null; showMenu(); }
 function prevMonth(){ currentMonth--; if(currentMonth < 0){ currentMonth = 11; currentYear--; } renderCalendar(); }
 function nextMonth(){ currentMonth++; if(currentMonth > 11){ currentMonth = 0; currentYear++; } renderCalendar(); }
 
+function logout() {
+  auth.signOut()
+    .then(() => {
+      // 🔹 Limpiar todas las variables globales
+      currentUser = null;
+      currentCompany = null;
+      companyData = {};
+      currentDate = null;
+      currentMonth = null;
+      currentYear = null;
+      costByRank = {};
+      exportCallback = null;
+
+      // 🔹 Limpiar la UI
+      document.getElementById('appView').style.display = 'none';
+      document.getElementById('loginView').style.display = 'flex';
+
+      // 🔹 Limpiar menús y calendarios
+      document.getElementById('companyList').innerHTML = '';
+      document.getElementById('calendar').innerHTML = '';
+      document.getElementById('selectedCompanyName').textContent = '';
+    })
+    .catch(err => alert("Error cerrando sesión: " + err.message));
+}
+document.getElementById('logoutBtn').onclick = logout;
+
+  
 // ==== Render calendario ====
 // IMPORTANTE: ahora normalizamos dateKey a 'YYYY-MM-DD' con ceros a la izquierda
 function renderCalendar(){
