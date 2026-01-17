@@ -145,12 +145,8 @@ input, select, textarea { width:100%; padding:8px; margin-top:6px; border-radius
   Cargando aplicación...
 </div>
 
-<div id="loginView" style="display:none";
-  height:100vh;
-  justify-content:center;
-  align-items:center;
-  background:#f4f6f8;
-">
+<div id="loginView" style="display:none; height:100vh; justify-content:center; align-items:center; background:#f4f6f8;">
+
   <div style="
     background:white;
     padding:30px;
@@ -300,9 +296,6 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const auth = firebase.auth();
 
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
 // ==== Variables Globales ====
 let companyData = {};
 let currentCompany = null;
