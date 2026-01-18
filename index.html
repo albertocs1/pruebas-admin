@@ -309,9 +309,22 @@ let exportCallback = null;
 // ==== Firebase helpers ====
 // Guardar datos solo del usuario actual
 function saveToStorage(){
-  if(!currentUser || !currentCompany) return;
-  db.ref('users/' + currentUser.uid + '/companies/' + currentCompany).set(companyData[currentCompany]);
+  if(!currentUser || !currentCompany) {
+    console.warn("saveToStorage cancelado: usuario o empresa nulos");
+    return;
+  }
+
+  db.ref(`users/${currentUser.uid}/companies/${currentCompany}`)
+    .set(companyData[currentCompany])
+    .then(() => {
+      console.log("Datos guardados correctamente en Firebase");
+    })
+    .catch(err => {
+      console.error("ERROR guardando en Firebase:", err);
+      alert("Error guardando datos en la nube: " + err.message);
+    });
 }
+
 
 // Cargar todas las empresas del usuario actual
 function loadFromStorage(callback){
